@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: fibonacci
+server:
+  port: 8081
+
+deploy:
+  swagger: true
