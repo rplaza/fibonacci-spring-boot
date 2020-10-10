@@ -18,12 +18,14 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <spring.boot.version>2.3.4.RELEASE</spring.boot.version>
         <spring.boot.main.class>com.inditex.fibonacci.Application</spring.boot.main.class>
-        <docker.tag>RELEASE</docker.tag>
         <maven.jar.plugin.version>2.4</maven.jar.plugin.version>
         <!-- Swagger -->
         <springfox.version>2.9.2</springfox.version>
         <!-- Testing -->
         <junit.version>4.12</junit.version>
+        <!-- Docker -->
+        <docker.plugin.version>1.4.3</docker.plugin.version>
+        <javax.activation.version>1.1.1</javax.activation.version>
     </properties>
 
     <dependencyManagement>
@@ -108,22 +110,28 @@
             </plugin>
             <plugin>
                 <groupId>com.spotify</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>1.0.0</version>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>${docker.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>tag</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
-                    <imageName>eu.gcr.io/novutrip/${project.artifactId}</imageName>
-                    <dockerDirectory>${project.build.directory}/../src/main/docker</dockerDirectory>
-                    <imageTags>
-                        <imageTag>${project.version}${docker.tag}</imageTag>
-                    </imageTags>
-                    <resources>
-                        <resource>
-                            <targetPath>/</targetPath>
-                            <directory>${project.build.directory}</directory>
-                            <include>${project.build.finalName}.jar</include>
-                        </resource>
-                    </resources>
+                    <repository>rplaza/fibonacci-spring-boot</repository>
+                    <tag>${project.version}</tag>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>javax.activation</groupId>
+                        <artifactId>activation</artifactId>
+                        <version>${javax.activation.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
